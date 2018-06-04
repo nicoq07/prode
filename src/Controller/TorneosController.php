@@ -17,7 +17,9 @@ class TorneosController extends AppController
      */
     public function index()
     {
-        $torneos = $this->paginate($this->Torneos);
+        $torneos = $this->paginate($this->Torneos, [
+            'contain' => 'Users'
+        ]);
         
         $this->set(compact('torneos'));
     }

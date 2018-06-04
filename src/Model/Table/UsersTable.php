@@ -10,6 +10,7 @@ use Cake\Validation\Validator;
  *
  * @property \App\Model\Table\GruposUsuariosTable|\Cake\ORM\Association\BelongsTo $GruposUsuarios
  * @property \App\Model\Table\RolesTable|\Cake\ORM\Association\BelongsTo $Roles
+ * @property \App\Model\Table\RolesTable|\Cake\ORM\Association\BelongsToMany $Torneos
  *
  * @method \App\Model\Entity\User get($primaryKey, $options = [])
  * @method \App\Model\Entity\User newEntity($data = null, array $options = [])
@@ -45,6 +46,11 @@ class UsersTable extends Table
         ]);
         $this->belongsTo('Roles', [
             'foreignKey' => 'rol_id'
+        ]);
+        $this->belongsToMany('Torneos', [
+            'foreignKey' => 'user_id',
+            'targetForeignKey' => 'torneo_id',
+            'through' => 'users_torneos'
         ]);
     }
 

@@ -6,6 +6,7 @@ namespace App\Controller;
  *
  * @property \App\Model\Table\UsersTable $Users
  * @property \App\Model\Table\TorneosTable $Torneos
+ * @property \App\Model\Table\UsersTorneosTable $UsersTorneos
  * @method \App\Model\Entity\UsersTorneo[]|\Cake\Datasource\ResultSetInterface paginate($object = null, array $settings = [])
  */
 class UsersTorneosController extends AppController
@@ -123,17 +124,26 @@ class UsersTorneosController extends AppController
      *
      * @return \Cake\Http\Response|NULL
      */
-    public function inscripcion()
+    public function inscripcion(int $torneo_id)
     {
+        $this->request->allowMethod([
+            'post',
+            'delete'
+        ]);
+        $this->autoRender = false;
         $usersTorneo = $this->UsersTorneos->newEntity();
         if ($this->request->is('post')) {
-            $usersTorneo = $this->UsersTorneos->patchEntity($usersTorneo, $this->request->getData());
+            
+            $user_id = $this->Auth->user('id');
+            $usersTorneo->torneo_id = $torneo_id;
+            $usersTorneo->user_id = $user_id;
+            
+            $this->UsersTorneos->patchEntity($usersTorneo, $this->request->getData());
             if ($this->UsersTorneos->save($usersTorneo)) {
-                $this->Flash->success(__('The users torneo has been saved.'));
                 
-                return $this->redirect([
-                    'action' => 'index'
-                ]);
+                $this->Flash->success(__('Te inscribiste en el torneo.'));
+                
+                return $this->redirect($this->referer());
             }
             $this->Flash->error(__('The users torneo could not be saved. Please, try again.'));
         }

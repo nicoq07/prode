@@ -1,5 +1,4 @@
 <?php
-use PHP_CodeSniffer\Tokenizers\PHP;
 ?>
 <div class='col-lg-12'>
 	<div class='col-lg-6 col-lg-offset-4'>

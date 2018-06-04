@@ -41,23 +41,22 @@ class PartidosApuestasUsersController extends AppController
             ->select([
             'Torneos.id'
         ])
-            ->innerJoin('Torneos', [
-            'Torneos.active' => true
+            ->contain('Torneos', [
+            'conditions' => [
+                'Torneos.active' => true
+            ]
         ])
             ->where([
             'user_id' => $user_id
         ]);
-        
-        $partidos = $this->PartidosApuestasUsers->Partidos->find('all')
-            ->join('Torneos')
-            ->where([
-            'Torneos.active' => true,
-            'Torneos.id IN' => $torneos_user
-        ]);
-        
+        // $partidos = $this->PartidosApuestasUsers->Partidos->find('all')->contain('Torneos', [
+        // 'conditions' => [
+        // 'Torneos.id IN' => $torneos_user
+        // ]
+        // ]);
         $partidosApuestasUsers = $this->paginate($this->PartidosApuestasUsers);
         
-        $this->set(compact('partidosApuestasUsers'));
+        $this->set(compact('partidosApuestasUsers', 'partidos'));
     }
 
     /**

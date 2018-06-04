@@ -49,7 +49,7 @@ class TorneosTable extends Table
         $this->belongsToMany('Users', [
             'foreignKey' => 'torneo_id',
             'targetForeignKey' => 'user_id',
-            'joinTable' => 'users_torneos'
+            'through' => 'users_torneos'
         ]);
     }
 

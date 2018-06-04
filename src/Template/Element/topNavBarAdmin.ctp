@@ -125,7 +125,7 @@
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-link" aria-hidden="true"></span> Links<span class="caret"></span></a>
           <ul class="dropdown-menu">
-            <li><a href="http://www.google.ch" target="_blank">Fixture</a></li>
+            <li><a href="http://www.promiedos.com.ar/mundial2018.php" target="_blank">Fixture</a></li>
 <!--             <li role="separator" class="divider"></li> -->
 <!--             <li><a href="http://www.google.ch" target="_blank">Timelogger</a></li> -->
 <!--             <li><a href="http://www.cubetech.ch" target="_blank">cubetech.ch</a></li> -->

@@ -4,7 +4,8 @@ namespace App\Controller;
 /**
  * UsersTorneos Controller
  *
- *
+ * @property \App\Model\Table\UsersTable $Users
+ * @property \App\Model\Table\TorneosTable $Torneos
  * @method \App\Model\Entity\UsersTorneo[]|\Cake\Datasource\ResultSetInterface paginate($object = null, array $settings = [])
  */
 class UsersTorneosController extends AppController
@@ -116,5 +117,25 @@ class UsersTorneosController extends AppController
         return $this->redirect([
             'action' => 'index'
         ]);
+    }
+
+    /**
+     *
+     * @return \Cake\Http\Response|NULL
+     */
+    public function inscripcion()
+    {
+        $usersTorneo = $this->UsersTorneos->newEntity();
+        if ($this->request->is('post')) {
+            $usersTorneo = $this->UsersTorneos->patchEntity($usersTorneo, $this->request->getData());
+            if ($this->UsersTorneos->save($usersTorneo)) {
+                $this->Flash->success(__('The users torneo has been saved.'));
+                
+                return $this->redirect([
+                    'action' => 'index'
+                ]);
+            }
+            $this->Flash->error(__('The users torneo could not be saved. Please, try again.'));
+        }
     }
 }

@@ -6,6 +6,10 @@
         echo $this->Form->control('descripcion', [
             'label' => 'Nombre'
         ]);
+        echo $this->Form->control('bandera', [
+            'label' => 'Banderas',
+            'options' => $banderas
+        ]);
         ?>
     </fieldset>
     <?=$this->Form->button(__('Cargar'), ['class' => 'btn btn-lg btn-block btn-success'])?>

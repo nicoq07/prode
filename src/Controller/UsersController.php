@@ -1,6 +1,8 @@
 <?php
 namespace App\Controller;
 
+use Cake\ORM\TableRegistry;
+
 /**
  * Users Controller
  *
@@ -13,11 +15,10 @@ class UsersController extends AppController
     public function isAuthorized($user)
     {
         if (isset($user['rol_id']) && $user['rol_id'] == USUARIO) {
-            if (in_array($this->request->action, [
+            if (in_array($this->request->getParam('action'), [
                 'cambiarPassword',
                 'index',
                 'view',
-                'logout',
                 'home',
                 'misTorneos'
             ])) {
@@ -33,7 +34,8 @@ class UsersController extends AppController
         parent::beforeFilter($event);
         $this->Auth->allow([
             'add',
-            'login'
+            'login',
+            'logout'
         ]);
     }
 
@@ -193,7 +195,15 @@ class UsersController extends AppController
     }
 
     public function misTorneos()
-    {}
+    {
+        $torneos = TableRegistry::getTableLocator()->get('Torneos')
+            ->find('all')
+            ->where([
+            'active' => true
+        ])
+            ->toArray();
+        $this->set(compact('torneos'));
+    }
 
     public function logout()
     {

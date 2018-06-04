@@ -2,11 +2,13 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\ORM\TableRegistry;
 
 /**
  * PartidosApuestasUsers Controller
  *
- *
+ * @property \App\Model\Table\PartidosTable $Partidos
+ * @property \App\Model\Table\UsersTable $Users
  * @method \App\Model\Entity\PartidosApuestasUser[]|\Cake\Datasource\ResultSetInterface paginate($object = null, array $settings = [])
  */
 class PartidosApuestasUsersController extends AppController
@@ -25,6 +27,34 @@ class PartidosApuestasUsersController extends AppController
      */
     public function index()
     {
+        $partidosApuestasUsers = $this->paginate($this->PartidosApuestasUsers);
+        
+        $this->set(compact('partidosApuestasUsers'));
+    }
+
+    public function fixture()
+    {
+        $user_id = $this->Auth->user('id');
+        
+        $torneos_user = TableRegistry::getTableLocator()->get('UsersTorneos')
+            ->find()
+            ->select([
+            'Torneos.id'
+        ])
+            ->innerJoin('Torneos', [
+            'Torneos.active' => true
+        ])
+            ->where([
+            'user_id' => $user_id
+        ]);
+        
+        $partidos = $this->PartidosApuestasUsers->Partidos->find('all')
+            ->join('Torneos')
+            ->where([
+            'Torneos.active' => true,
+            'Torneos.id IN' => $torneos_user
+        ]);
+        
         $partidosApuestasUsers = $this->paginate($this->PartidosApuestasUsers);
         
         $this->set(compact('partidosApuestasUsers'));
@@ -52,7 +82,7 @@ class PartidosApuestasUsersController extends AppController
      *
      * @return \Cake\Http\Response|null Redirects on successful add, renders view otherwise.
      */
-    public function add()
+    public function add($id = null)
     {
         $user_id = $this->Auth->user('id');
         $partidosApuestasUser = $this->PartidosApuestasUsers->newEntity();

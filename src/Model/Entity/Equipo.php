@@ -8,6 +8,7 @@ use Cake\ORM\Entity;
  *
  * @property int $id
  * @property string $descripcion
+ * @property string $bandera
  */
 class Equipo extends Entity
 {
@@ -27,6 +28,7 @@ class Equipo extends Entity
     }
 
     protected $_accessible = [
-        'descripcion' => true
+        '*' => true,
+        'id' => false
     ];
 }

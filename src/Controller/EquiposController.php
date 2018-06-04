@@ -60,7 +60,10 @@ class EquiposController extends AppController
             }
             $this->Flash->error(__('The equipo could not be saved. Please, try again.'));
         }
-        $this->set(compact('equipo'));
+        $this->loadComponent('Equipo');
+        
+        $banderas = $this->Equipo->banderaPaises();
+        $this->set(compact('equipo', 'banderas'));
     }
 
     /**
@@ -91,7 +94,10 @@ class EquiposController extends AppController
             }
             $this->Flash->error(__('The equipo could not be saved. Please, try again.'));
         }
-        $this->set(compact('equipo'));
+        $this->loadComponent('Equipo');
+        
+        $banderas = $this->Equipo->banderaPaises();
+        $this->set(compact('equipo', 'banderas'));
     }
 
     /**

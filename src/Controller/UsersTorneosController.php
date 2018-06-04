@@ -135,10 +135,10 @@ class UsersTorneosController extends AppController
         if ($this->request->is('post')) {
             
             $user_id = $this->Auth->user('id');
-            $usersTorneo->torneo_id = $torneo_id;
-            $usersTorneo->user_id = $user_id;
-            
+            $usersTorneo->set('torneo_id', $torneo_id);
+            $usersTorneo->set('user_id', $user_id);
             $this->UsersTorneos->patchEntity($usersTorneo, $this->request->getData());
+            debug($this->UsersTorneos->save($usersTorneo));
             if ($this->UsersTorneos->save($usersTorneo)) {
                 
                 $this->Flash->success(__('Te inscribiste en el torneo.'));

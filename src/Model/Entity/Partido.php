@@ -44,7 +44,7 @@ class Partido extends Entity
         $equipoLocal = $EquiposTable->get($this->equipo_id_local);
         $equipoVisitante = $EquiposTable->get($this->equipo_id_visitante);
         
-        $cadena = h($equipoLocal->presentacion) . ' - ' . h($equipoVisitante->presentacion);
+        $cadena = h($equipoLocal->presentacion) . ' - ' . h($equipoVisitante->presentacion) . "  (" . $this->fecha . ")";
         
         return $cadena;
     }

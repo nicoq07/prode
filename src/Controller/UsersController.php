@@ -196,10 +196,21 @@ class UsersController extends AppController
 
     public function misTorneos()
     {
+        $user_id = $this->Auth->user('id');
+        $misTorneos = TableRegistry::getTableLocator()->get('UsersTorneos')
+            ->find()
+            ->select([
+            'UsersTorneos.torneo_id'
+        ])
+            ->where([
+            'user_id' => $user_id
+        ]);
+        
         $torneos = TableRegistry::getTableLocator()->get('Torneos')
             ->find('all')
             ->where([
-            'active' => true
+            'active' => true,
+            'Torneos.id IN' => $misTorneos
         ])
             ->toArray();
         $this->set(compact('torneos'));

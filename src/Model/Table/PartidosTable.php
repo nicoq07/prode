@@ -87,11 +87,7 @@ class PartidosTable extends Table
         $validator->scalar('fecha')
             ->maxLength('fecha', 40)
             ->requirePresence('fecha', 'create')
-            ->notEmpty('fecha')
-            ->add('fecha', 'unique', [
-            'rule' => 'validateUnique',
-            'provider' => 'table'
-        ]);
+            ->notEmpty('fecha');
         
         $validator->dateTime('dia_partido')
             ->requirePresence('dia_partido', 'create')
@@ -116,9 +112,6 @@ class PartidosTable extends Table
     {
         $rules->add($rules->isUnique([
             'id'
-        ]));
-        $rules->add($rules->isUnique([
-            'fecha'
         ]));
         $rules->add($rules->existsIn([
             'torneo_id'

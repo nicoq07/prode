@@ -10,7 +10,7 @@ use Cake\Validation\Validator;
  * Partidos Model
  *
  * @property \App\Model\Table\TorneosTable|\Cake\ORM\Association\BelongsTo $Torneos
- *
+ * @property \App\Model\Table\TorneosTable|\Cake\ORM\Association\BelongsTo $Equipos
  * @method \App\Model\Entity\Partido get($primaryKey, $options = [])
  * @method \App\Model\Entity\Partido newEntity($data = null, array $options = [])
  * @method \App\Model\Entity\Partido[] newEntities(array $data, array $options = [])

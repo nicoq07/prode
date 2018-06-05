@@ -19,6 +19,7 @@ use Cake\ORM\TableRegistry;
  * @property \Cake\I18n\FrozenTime $created
  * @property \Cake\I18n\FrozenTime $modified
  *
+ * @property \App\Model\Entity\Equipo $equipo
  * @property \App\Model\Entity\Torneo $torneo
  */
 class Partido extends Entity
@@ -45,6 +46,17 @@ class Partido extends Entity
         $equipoVisitante = $EquiposTable->get($this->equipo_id_visitante);
         
         $cadena = h($equipoLocal->presentacion) . ' - ' . h($equipoVisitante->presentacion) . "  (" . $this->fecha . ")";
+        
+        return $cadena;
+    }
+
+    public function _getPresentacionSinFecha()
+    {
+        $EquiposTable = TableRegistry::getTableLocator()->get('Equipos');
+        $equipoLocal = $EquiposTable->get($this->equipo_id_local);
+        $equipoVisitante = $EquiposTable->get($this->equipo_id_visitante);
+        
+        $cadena = h($equipoLocal->presentacion) . ' - ' . h($equipoVisitante->presentacion);
         
         return $cadena;
     }

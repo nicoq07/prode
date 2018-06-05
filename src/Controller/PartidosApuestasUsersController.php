@@ -3,7 +3,6 @@ namespace App\Controller;
 
 use App\Controller\AppController;
 use Cake\I18n\Time;
-use Cake\ORM\TableRegistry;
 
 /**
  * PartidosApuestasUsers Controller
@@ -38,27 +37,43 @@ class PartidosApuestasUsersController extends AppController
     {
         $user_id = $this->Auth->user('id');
         
-        $torneos_user = TableRegistry::getTableLocator()->get('UsersTorneos')
-            ->find()
-            ->select([
-            'Torneos.id'
-        ])
-            ->contain('Torneos', [
-            'conditions' => [
-                'Torneos.active' => true
-            ]
-        ])
-            ->where([
-            'user_id' => $user_id
-        ]);
-        // $partidos = $this->PartidosApuestasUsers->Partidos->find('all')->contain('Torneos', [
-        // 'conditions' => [
-        // 'Torneos.id IN' => $torneos_user
-        // ]
-        // ]);
-        $partidosApuestasUsers = $this->paginate($this->PartidosApuestasUsers);
+        $equipos = $this->PartidosApuestasUsers->Partidos->Equipos->find('list')->toArray();
         
-        $this->set(compact('partidosApuestasUsers', 'partidos'));
+        $listado_partidos = $this->PartidosApuestasUsers->Partidos->setDisplayField('presentacionSinFecha')
+            ->find()
+            ->orderAsc('Partidos.fecha');
+        
+        $partidos = null;
+        $i = 0;
+        foreach ($listado_partidos as $partido) {
+            
+            $apuestaHecha = $this->PartidosApuestasUsers->find()
+                ->where([
+                'user_id' => $user_id,
+                'partido_id' => $partido->id
+            ])
+                ->first();
+            
+            $partidos[$i]['id'] = $partido->id;
+            $partidos[$i]['fecha'] = $partido->fecha;
+            $partidos[$i]['dia'] = $partido->dia_partido->format('H:i , d-m-Y');
+            $partidos[$i]['equipo_local'] = $equipos[$partido->equipo_id_local];
+            $partidos[$i]['equipo_visitante'] = $equipos[$partido->equipo_id_visitante];
+            $partidos[$i]['goles_local'] = $partido->goles_local;
+            $partidos[$i]['goles_visitante'] = $partido->goles_visitante;
+            $partidos[$i]['equipo_ganador'] = $partido->equipo_id_ganador;
+            if ($apuestaHecha) {
+                $partidos[$i]['apuesta_goles_local'] = $apuestaHecha->goles_local;
+                $partidos[$i]['apuesta_goles_visitante'] = $apuestaHecha->goles_local;
+            }
+            
+            $i ++;
+        }
+        
+        debug($partidos);
+        die();
+        
+        $this->set(compact('listado_partidos', 'equipos'));
     }
 
     /**
@@ -103,31 +118,30 @@ class PartidosApuestasUsersController extends AppController
             $this->Flash->error(__('The partidos apuestas user could not be saved. Please, try again.'));
         }
         
-        $una_hora_menos = strtotime('-1 hour', strtotime(date('Y-m-d H:i')));
+        $una_hora_menos = strtotime('+1 hour', strtotime(date('Y-m-d H:i')));
         
         $listado_partidos = $this->PartidosApuestasUsers->Partidos->find('list')->where([
-            "DATE_FORMAT(Partido.dia_partido,'YYYY-MM-DD %H:%i)' " <= date('Y-m-d H:i', $una_hora_menos)
+            "Partidos.dia_partido >=" => date('Y-m-d H:i', $una_hora_menos)
         ]);
         
-        debug($listado_partidos->all());
-        // ->toArray();
         $partidos = null;
-        foreach ($listado_partidos as $id_partido => $partido) {
-            $apuestaHecha = $this->PartidosApuestasUsers->find()
-                ->where([
-                'user_id' => $user_id,
-                'partido_id' => $id_partido
-            ])
-                ->first();
-            $prediccion = "";
-            
-            if ($apuestaHecha) {
-                $prediccion = " Predije: (" . $apuestaHecha->goles_local . "-" . $apuestaHecha->goles_visitante . ")";
+        if ($listado_partidos) {
+            foreach ($listado_partidos as $id_partido => $partido) {
+                $apuestaHecha = $this->PartidosApuestasUsers->find()
+                    ->where([
+                    'user_id' => $user_id,
+                    'partido_id' => $id_partido
+                ])
+                    ->first();
+                $prediccion = "";
+                
+                if ($apuestaHecha) {
+                    $prediccion = " Predije: (" . $apuestaHecha->goles_local . "-" . $apuestaHecha->goles_visitante . ")";
+                }
+                
+                $partidos[$id_partido] = $partido . $prediccion;
             }
-            
-            $partidos[$id_partido] = $partido . $prediccion;
         }
-        
         $this->set(compact('partidosApuestasUser', 'partidos'));
     }
 

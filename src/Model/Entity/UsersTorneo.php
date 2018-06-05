@@ -6,6 +6,7 @@ use Cake\ORM\Entity;
 /**
  * UsersTorneo Entity
  *
+ * @property int $id
  * @property int $torneo_id
  * @property int $user_id
  *

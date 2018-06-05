@@ -38,8 +38,7 @@ class UsersTorneosTable extends Table
         $this->setTable('users_torneos');
         $this->setDisplayField('torneo_id');
         $this->setPrimaryKey([
-            'torneo_id',
-            'user_id'
+            'id'
         ]);
         
         $this->belongsTo('Torneos', [

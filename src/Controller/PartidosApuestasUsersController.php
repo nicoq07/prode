@@ -32,7 +32,7 @@ class PartidosApuestasUsersController extends AppController
 
     public function fixture()
     {
-        $this->loadComponent('Partido');
+        $this->loadComponent('Apuesta');
         $user_id = $this->Auth->user('id');
         
         $equipos = $this->PartidosApuestasUsers->Partidos->Equipos->find('list')->toArray();
@@ -52,8 +52,8 @@ class PartidosApuestasUsersController extends AppController
             ])
                 ->first();
             
-            $partidos[$i]['id'] = $partido->id;
-            $partidos[$i]['editable'] = $this->Partido->puedeEditar(new \DateTime($partido->dia_partido->format('Y-m-d H:i:s')));
+            $partidos[$i]['partido_id'] = $partido->id;
+            $partidos[$i]['editable'] = $this->Apuesta->puedeEditar(new \DateTime($partido->dia_partido->format('Y-m-d H:i:s')));
             $partidos[$i]['fecha'] = $partido->fecha;
             $partidos[$i]['dia'] = $partido->dia_partido->format('d-m-Y');
             $partidos[$i]['hora'] = $partido->dia_partido->format('H:i') . ' hs ';
@@ -64,7 +64,9 @@ class PartidosApuestasUsersController extends AppController
             $partidos[$i]['equipo_ganador'] = $partido->equipo_id_ganador;
             if ($apuestaHecha) {
                 $partidos[$i]['apuesta_goles_local'] = $apuestaHecha->goles_local;
-                $partidos[$i]['apuesta_goles_visitante'] = $apuestaHecha->goles_local;
+                $partidos[$i]['apuesta_goles_visitante'] = $apuestaHecha->goles_visitante;
+                $partidos[$i]['apuesta_id'] = $apuestaHecha->id;
+                $partidos[$i]['puntaje'] = $this->Apuesta->calcularPuntaje($apuestaHecha, $partido);
             }
             
             $i ++;
@@ -171,7 +173,9 @@ class PartidosApuestasUsersController extends AppController
     public function edit($id = null)
     {
         $partidosApuestasUser = $this->PartidosApuestasUsers->get($id, [
-            'contain' => []
+            'contain' => [
+                'Partidos'
+            ]
         ]);
         if ($this->request->is([
             'patch',

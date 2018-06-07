@@ -19,19 +19,27 @@ foreach ($partidos as $partido) :
     ?>
     
 	<div class="col-lg-4 col-lg-offset-1  panel-info effect6" style="margin-bottom: 10px">
-	<div class='col-lg-3 col-lg-offset-9'><?php
-    
+	<div class='col-lg-4 col-lg-offset-8'><?php
     if ($partido['editable']) {
-        $accion = [
-            'controller' => 'PartidosApuestasUsers',
-            'action' => 'edit',
-            $partido['id']
-        ];
+        if (! empty($partido['apuesta_id'])) {
+            $accion = [
+                'controller' => 'PartidosApuestasUsers',
+                'action' => 'edit',
+                $partido['apuesta_id']
+            ];
+            $texto = 'Editar';
+        } else {
+            $accion = [
+                'controller' => 'PartidosApuestasUsers',
+                'action' => 'add'
+            ];
+            $texto = 'Cargar';
+        }
     } else {
+        $texto = '';
         $accion = [];
     }
-    
-    echo $this->Html->link("<span style='color:#aa4839;' class=' glyphicon glyphicon-pencil'>" . __('Edit') . "</span>", $accion, [
+    echo $this->Html->link("<span style='color:#aa4839;' class=' glyphicon glyphicon-pencil'>" . h($texto) . "</span>", $accion, [
         'escape' => false
     ])?></div>
 		<div class='col-lg-12 text-center  panel-heading'><h4><?php
@@ -85,6 +93,9 @@ foreach ($partidos as $partido) :
     ?></h6>
     		</div>
     </div>
+    <div class='col-lg-12 text-center  alert alert-info'><h4><?php
+    echo 'Puntaje : ' . $partido['puntaje'];
+    ?></h4></div>
 	</div>
 	
 		<?php

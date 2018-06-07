@@ -3,7 +3,7 @@ namespace App\Controller\Component;
 
 use Cake\Controller\Component;
 
-class PartidoComponent extends Component
+class ApuestaComponent extends Component
 {
 
     public function puedeEditar(\DateTime $horaPartido)
@@ -17,5 +17,10 @@ class PartidoComponent extends Component
             return true;
         else
             return false;
+    }
+
+    public function calcularPuntaje($apuesta, $partido)
+    {
+        return 'partido sin resultados';
     }
 }

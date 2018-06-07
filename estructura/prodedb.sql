@@ -86,10 +86,10 @@ CREATE TABLE `partidos` (
   `goles_visitante` int(2) DEFAULT NULL,
   `created` datetime DEFAULT NULL,
   `modified` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`,`torneo_id`,`equipo_id_local`,`equipo_id_visitante`),
-  UNIQUE KEY `id_UNIQUE` (`id`),
-  UNIQUE KEY `fecha_UNIQUE` (`fecha`),
-  KEY `torneo_partidos_idx` (`torneo_id`),
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `torneo_id` (`torneo_id`,`equipo_id_local`,`equipo_id_visitante`,`fecha`),
+  UNIQUE KEY `unique_index` (`torneo_id`,`equipo_id_local`,`equipo_id_visitante`,`fecha`),
+  UNIQUE KEY `unique_partidos` (`torneo_id`,`equipo_id_local`,`equipo_id_visitante`,`fecha`),
   KEY `equipos_ganador_partidos_idx` (`equipo_id_ganador`),
   KEY `equipos_visitante_partidos_idx` (`equipo_id_visitante`),
   KEY `equipos_local_partidos_idx` (`equipo_id_local`),
@@ -97,7 +97,7 @@ CREATE TABLE `partidos` (
   CONSTRAINT `equipos_local_partidos` FOREIGN KEY (`equipo_id_local`) REFERENCES `equipos` (`id`),
   CONSTRAINT `equipos_visitante_partidos` FOREIGN KEY (`equipo_id_visitante`) REFERENCES `equipos` (`id`),
   CONSTRAINT `torneo_partidos` FOREIGN KEY (`torneo_id`) REFERENCES `torneos` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -106,7 +106,7 @@ CREATE TABLE `partidos` (
 
 LOCK TABLES `partidos` WRITE;
 /*!40000 ALTER TABLE `partidos` DISABLE KEYS */;
-INSERT INTO `partidos` VALUES (1,1,2,3,NULL,'PRIMERA FECHA','2018-06-20 11:58:00',NULL,NULL,'2018-06-03 12:01:56','2018-06-03 12:01:56');
+INSERT INTO `partidos` VALUES (1,1,2,3,NULL,'PRIMERA FECHA','2018-06-20 11:58:00',3,3,'2018-06-03 12:01:56','2018-06-07 00:23:08'),(6,1,1,3,NULL,'PRIMERA FECHA','2018-06-07 01:45:00',NULL,NULL,'2018-06-06 23:50:19','2018-06-06 23:50:19'),(7,1,3,4,NULL,'PRIMERA FECHA','2018-06-06 23:50:00',NULL,NULL,'2018-06-06 23:50:33','2018-06-06 23:50:33');
 /*!40000 ALTER TABLE `partidos` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -127,12 +127,12 @@ CREATE TABLE `partidos_apuestas_users` (
   `puntaje_obtenido` int(11) DEFAULT '0',
   `created` datetime DEFAULT NULL,
   `modified` datetime DEFAULT NULL,
-  PRIMARY KEY (`partido_id`,`user_id`),
-  UNIQUE KEY `user_id_UNIQUE` (`user_id`),
-  UNIQUE KEY `partido_id_UNIQUE` (`partido_id`),
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unique_partidos_apuestas_usuarios` (`user_id`,`partido_id`),
   CONSTRAINT `apuestas_partidos` FOREIGN KEY (`partido_id`) REFERENCES `partidos` (`id`),
   CONSTRAINT `apuestas_usuarios` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -141,7 +141,7 @@ CREATE TABLE `partidos_apuestas_users` (
 
 LOCK TABLES `partidos_apuestas_users` WRITE;
 /*!40000 ALTER TABLE `partidos_apuestas_users` DISABLE KEYS */;
-INSERT INTO `partidos_apuestas_users` VALUES (1,21,1,'2',0,1,0,'2018-06-03 13:09:45','2018-06-03 13:09:45');
+INSERT INTO `partidos_apuestas_users` VALUES (1,20,2,'1',0,1,0,'2018-06-06 23:26:30','2018-06-06 23:39:15',1),(6,20,1,'2',0,1,0,'2018-06-07 00:04:14','2018-06-07 00:04:27',5);
 /*!40000 ALTER TABLE `partidos_apuestas_users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -277,4 +277,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-06-04  0:02:01
+-- Dump completed on 2018-06-07  1:29:26

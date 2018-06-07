@@ -117,6 +117,13 @@ class PartidosTable extends Table
             'torneo_id'
         ], 'Torneos'));
         
+        $rules->add($rules->isUnique([
+            'torneo_id',
+            'fecha',
+            'equipo_id_local',
+            'equipo_id_visitante'
+        ], 'Partido ya cargado'));
+        
         return $rules;
     }
 }

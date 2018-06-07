@@ -1,9 +1,6 @@
 <?php
 namespace App\Controller;
 
-use App\Controller\AppController;
-use Cake\I18n\Time;
-
 /**
  * PartidosApuestasUsers Controller
  *
@@ -35,6 +32,7 @@ class PartidosApuestasUsersController extends AppController
 
     public function fixture()
     {
+        $this->loadComponent('Partido');
         $user_id = $this->Auth->user('id');
         
         $equipos = $this->PartidosApuestasUsers->Partidos->Equipos->find('list')->toArray();
@@ -55,8 +53,10 @@ class PartidosApuestasUsersController extends AppController
                 ->first();
             
             $partidos[$i]['id'] = $partido->id;
+            $partidos[$i]['editable'] = $this->Partido->puedeEditar(new \DateTime($partido->dia_partido->format('Y-m-d H:i:s')));
             $partidos[$i]['fecha'] = $partido->fecha;
-            $partidos[$i]['dia'] = $partido->dia_partido->format('H:i , d-m-Y');
+            $partidos[$i]['dia'] = $partido->dia_partido->format('d-m-Y');
+            $partidos[$i]['hora'] = $partido->dia_partido->format('H:i') . ' hs ';
             $partidos[$i]['equipo_local'] = $equipos[$partido->equipo_id_local];
             $partidos[$i]['equipo_visitante'] = $equipos[$partido->equipo_id_visitante];
             $partidos[$i]['goles_local'] = $partido->goles_local;
@@ -70,10 +70,10 @@ class PartidosApuestasUsersController extends AppController
             $i ++;
         }
         
-        debug($partidos);
-        die();
+        // debug($partidos);
+        // die();
         
-        $this->set(compact('listado_partidos', 'equipos'));
+        $this->set(compact('partidos'));
     }
 
     /**
@@ -102,8 +102,23 @@ class PartidosApuestasUsersController extends AppController
     {
         $user_id = $this->Auth->user('id');
         $partidosApuestasUser = $this->PartidosApuestasUsers->newEntity();
+        
         if ($this->request->is('post')) {
+            $id_partido = $this->request->getData('partido_id');
+            
+            $apuestaHecha = $this->PartidosApuestasUsers->find()
+                ->where([
+                'user_id' => $user_id,
+                'partido_id' => $id_partido
+            ])
+                ->first();
+            
+            if ($apuestaHecha) {
+                $partidosApuestasUser = $this->PartidosApuestasUsers->get($apuestaHecha->id);
+            }
+            // si es nuevo
             $partidosApuestasUser = $this->PartidosApuestasUsers->patchEntity($partidosApuestasUser, $this->request->getData());
+            
             // seteo el cargado en true
             $partidosApuestasUser->user_id = intval($user_id);
             $partidosApuestasUser->cargado = true;

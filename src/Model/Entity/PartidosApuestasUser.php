@@ -6,6 +6,7 @@ use Cake\ORM\Entity;
 /**
  * PartidosApuestasUser Entity
  *
+ * @property int $id
  * @property int $partido_id
  * @property string $user_id
  * @property int $goles_local
@@ -32,6 +33,7 @@ class PartidosApuestasUser extends Entity
      * @var array
      */
     protected $_accessible = [
-        '*' => true
+        '*' => true,
+        'id' => false
     ];
 }

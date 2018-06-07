@@ -40,8 +40,7 @@ class PartidosApuestasUsersTable extends Table
         $this->setTable('partidos_apuestas_users');
         $this->setDisplayField('partido_id');
         $this->setPrimaryKey([
-            'partido_id',
-            'user_id'
+            'id'
         ]);
         
         $this->addBehavior('Timestamp');

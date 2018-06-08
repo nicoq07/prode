@@ -55,25 +55,30 @@ class PartidosApuestasUsersController extends AppController
             $partidos[$i]['partido_id'] = $partido->id;
             $partidos[$i]['editable'] = $this->Apuesta->puedeEditar(new \DateTime($partido->dia_partido->format('Y-m-d H:i:s')));
             $partidos[$i]['fecha'] = $partido->fecha;
-            $partidos[$i]['dia'] = $partido->dia_partido->format('d-m-Y');
+            $partidos[$i]['nom_dia'] = $partido->dia_partido->format('l');
+            $partidos[$i]['num_dia'] = $partido->dia_partido->format('d/m');
+            
             $partidos[$i]['hora'] = $partido->dia_partido->format('H:i') . ' hs ';
             $partidos[$i]['equipo_local'] = $equipos[$partido->equipo_id_local];
             $partidos[$i]['equipo_visitante'] = $equipos[$partido->equipo_id_visitante];
-            $partidos[$i]['goles_local'] = $partido->goles_local;
-            $partidos[$i]['goles_visitante'] = $partido->goles_visitante;
+            $partidos[$i]['goles_local'] = intval($partido->goles_local);
+            $partidos[$i]['goles_visitante'] = intval($partido->goles_visitante);
             $partidos[$i]['equipo_ganador'] = $partido->equipo_id_ganador;
             if ($apuestaHecha) {
-                $partidos[$i]['apuesta_goles_local'] = $apuestaHecha->goles_local;
-                $partidos[$i]['apuesta_goles_visitante'] = $apuestaHecha->goles_visitante;
+                $partidos[$i]['apuesta_goles_local'] = intval($apuestaHecha->goles_local);
+                $partidos[$i]['apuesta_goles_visitante'] = intval($apuestaHecha->goles_visitante);
                 $partidos[$i]['apuesta_id'] = $apuestaHecha->id;
-                $partidos[$i]['puntaje'] = $this->Apuesta->calcularPuntaje($apuestaHecha, $partido);
+                $partidos[$i]['puntaje'] = intval($this->Apuesta->calcularPuntaje($apuestaHecha, $partido));
+                
+                $apuesta = $this->PartidosApuestasUsers->get($apuestaHecha->id);
+                $apuesta->set('puntaje_obtenido', $partidos[$i]['puntaje']);
+                if (! $this->PartidosApuestasUsers->save($apuesta)) {
+                    $this->Flash->error('No se pudo guardar el puntaje');
+                }
             }
             
             $i ++;
         }
-        
-        // debug($partidos);
-        // die();
         
         $this->set(compact('partidos'));
     }
@@ -135,10 +140,10 @@ class PartidosApuestasUsersController extends AppController
             $this->Flash->error(__('The partidos apuestas user could not be saved. Please, try again.'));
         }
         
-        $una_hora_menos = strtotime('+1 hour', strtotime(date('Y-m-d H:i')));
+        $una_hora_menos = strtotime('+2 hour', strtotime(date('Y-m-d H:i')));
         
         $listado_partidos = $this->PartidosApuestasUsers->Partidos->find('list')->where([
-            "Partidos.dia_partido >=" => date('Y-m-d H:i', $una_hora_menos)
+            "Partidos.dia_partido >" => date('Y-m-d H:i', $una_hora_menos)
         ]);
         
         $partidos = null;

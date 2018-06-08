@@ -18,8 +18,8 @@ echo h("Mi Fixture");
 foreach ($partidos as $partido) :
     ?>
     
-	<div class="col-lg-4 col-lg-offset-1  panel-info effect6" style="margin-bottom: 10px">
-	<div class='col-lg-4 col-lg-offset-8'><?php
+	<div class="col-lg-4 col-lg-offset-1 panel  panel-info effect6" style="margin-bottom: 10px">
+	<div class='col-lg-4 col-lg-offset-8 panel-'><?php
     if ($partido['editable']) {
         if (! empty($partido['apuesta_id'])) {
             $accion = [
@@ -35,19 +35,24 @@ foreach ($partidos as $partido) :
             ];
             $texto = 'Cargar';
         }
+        echo $this->Html->link(h($texto), $accion, [
+            'escape' => false,
+            'class' => 'btn btn-sm glyphicon glyphicon-pencil btn-default'
+        ]);
     } else {
-        $texto = '';
-        $accion = [];
+        echo $this->Html->link(h(''), [], [
+            'escape' => false,
+            'class' => 'btn btn-md glyphicon glyphicon-lock btn-default'
+        ]);
     }
-    echo $this->Html->link("<span style='color:#aa4839;' class=' glyphicon glyphicon-pencil'>" . h($texto) . "</span>", $accion, [
-        'escape' => false
-    ])?></div>
+    ?></div>
+    &nbsp;
 		<div class='col-lg-12 text-center  panel-heading'><h4><?php
     echo $partido['fecha'];
     ?></h4></div>
 	
 		<div class='col-lg-12 text-center  alert alert-info'><h4><?php
-    echo $partido['dia'] . '<br>' . '&nbsp;' . $partido['hora'];
+    echo __($partido['nom_dia']) . ' ' . __($partido['num_dia']) . '<br>' . '&nbsp;' . $partido['hora'];
     ?></h4></div>
     	<div class='col-lg-6 text-center alert-success'><h3><?php
     echo $partido['equipo_local'];
@@ -62,13 +67,13 @@ foreach ($partidos as $partido) :
         <div class='col-lg-4 '><h6><?php
     echo $partido['equipo_local'];
     echo "( \n";
-    echo ! empty($partido['apuesta_goles_local']) ? $partido['apuesta_goles_local'] : '-';
+    echo array_key_exists('apuesta_goles_local', $partido) ? $partido['apuesta_goles_local'] : '-';
     echo " )";
     ?></h6></div>
         <div class='col-lg-4 '><h6><?php
     echo $partido['equipo_visitante'];
     echo "( \n";
-    echo ! empty($partido['apuesta_goles_visitante']) ? $partido['apuesta_goles_visitante'] : '-';
+    echo array_key_exists('apuesta_goles_visitante', $partido) ? $partido['apuesta_goles_visitante'] : '-';
     echo " )";
     ?></h6></div>
         </div>
@@ -81,20 +86,24 @@ foreach ($partidos as $partido) :
              <div class='col-lg-4'><h6><?php
     echo $partido['equipo_local'];
     echo "( \n";
-    echo ! empty($partido['goles_local']) ? $partido['goles_local'] : '-';
+    echo $partido['goles_local'];
     echo " )";
     ?></h6>
     		</div>
             <div class='col-lg-4'><h6><?php
     echo $partido['equipo_visitante'];
     echo "( ";
-    echo ! empty($partido['goles_visitante']) ? $partido['goles_visitante'] : '-';
+    echo $partido['goles_visitante'];
     echo " )";
     ?></h6>
     		</div>
     </div>
+    <?php
+    
+    ?>
     <div class='col-lg-12 text-center  alert alert-info'><h4><?php
-    echo 'Puntaje : ' . $partido['puntaje'];
+    echo 'Puntaje : ';
+    echo array_key_exists('puntaje', $partido) ? $partido['puntaje'] : '-';
     ?></h4></div>
 	</div>
 	

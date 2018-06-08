@@ -22,7 +22,7 @@
             
             echo \Cake\Routing\Router::url(array(
                 'controller' => 'PartidosApuestasUsers',
-                'action' => 'add'
+                'action' => 'fixture'
             ));
             ?>"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Nueva</a></li>
            	<li><a href="<?php

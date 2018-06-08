@@ -10,7 +10,7 @@ use Cake\ORM\Entity;
  * @property int $partido_id
  * @property string $user_id
  * @property int $goles_local
- * @property string $goles_visitante
+ * @property int $goles_visitante
  * @property int $acertado
  * @property int $cargado
  * @property int $puntaje_obtenido

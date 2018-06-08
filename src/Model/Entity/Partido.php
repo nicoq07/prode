@@ -15,7 +15,7 @@ use Cake\ORM\TableRegistry;
  * @property string $fecha
  * @property \Cake\I18n\FrozenTime $dia_partido
  * @property int $goles_local
- * @property string $goles_visitante
+ * @property int $goles_visitante
  * @property \Cake\I18n\FrozenTime $created
  * @property \Cake\I18n\FrozenTime $modified
  *

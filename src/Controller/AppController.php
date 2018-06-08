@@ -16,6 +16,7 @@ namespace App\Controller;
 
 use Cake\Controller\Controller;
 use Cake\Event\Event;
+use Cake\I18n\I18n;
 
 /**
  * Application Controller
@@ -40,6 +41,8 @@ class AppController extends Controller
     public function initialize()
     {
         parent::initialize();
+        
+        I18n::setLocale('es_Ar');
         
         $this->loadComponent('RequestHandler', [
             'enableBeforeRedirect' => false
